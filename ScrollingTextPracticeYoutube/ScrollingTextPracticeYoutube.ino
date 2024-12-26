@@ -118,7 +118,6 @@ void setup() {
   Serial.begin(115200);
 
   displaySetup();
-
 }
 
 uint8_t wheelval = 0;
@@ -129,31 +128,36 @@ void loop() {
   //drawBorder(myCYAN);
   drawBorderRainbow(2, 64);
 
-  printTextRainbow(wheelval, "WELCOME", 11, 1);
-  //printText(myGREEN, "WELCOME", 11, 1);
+  printTextRainbow(wheelval, "WELCOME", 11, 1);         //Prints text to chosen x y position with rainbow color
+  //printTextRainbowCentered(wheelval, "WELCOME", 1);    //Prints text X-Centered to chosen Y position with rainbow color
+  //printText(myGREEN, "WELCOME", 11, 1);                //Prints text to chosen x y position and desired color
+  //printTextCentered(myGREEN, "WELCOME", 1);            //Prints text X-Centered to chosen Y position and desired color
 
-  scrollText(wheelval, "AND HAVE A WONDERFUL DAY!");
+  scrollText(wheelval, "AND HAVE A WONDERFUL DAY!");    //Prints Scrolling text with a rainbow color
 
-
-
-  printTextRainbow(wheelval, "ENJOY IT", 8, 24);
-  //printText(myMAGENTA, "ENJOY IT!", 8, 24);
-  //drawText(wheelval);
+  printTextRainbow(wheelval, "ENJOY IT", 8, 24);        //Prints text to chosen x y position with rainbow color
+  //printTextRainbowCentered(wheelval, "ENJOY IT", 24);  //Prints text X-Centered to chosen Y position with rainbow color
+  //printText(myMAGENTA, "ENJOY IT!", 8, 24);            //Prints text to chosen x y position and desired color
+  //printTextCentered(myMAGENTA, "ENJOY IT!", 24);       //Prints text X-Centered to chosen Y position and desired color
+  
+  
+  //drawText(wheelval, "WELCOME", 11, 1);                //Prints text to chosen x y position and variable color
+  //drawTextCentered(wheelval, "WELCOME", 1);            //Prints text X-Centered to chosen Y position and variable color
+  
+  
   wheelval += 1;
-  //  colorWheelOffset += 5;
+  //colorWheelOffset += 5;
   //scrollString("Hello");
   delay(20);
 
   //scrollString("I Wish you have a Wonderful day full of Joy and Blessings");
-  // scrollString("I Wish you have a Wonderful day!");
+  //scrollString("I Wish you have a Wonderful day!");
 }
 
 void drawBorderRainbow(int sPeed, int colors) {  // draw a box in Rainbow color
   dma_display->drawRect(0, 0, dma_display->width(), dma_display->height(), colorWheel(colors + colorWheelBorderOffset));
   colorWheelBorderOffset += sPeed;
 }
-
-
 
 void drawBorder(uint16_t color) {  // draw a box in a chosen color
   int w = dma_display->width();
@@ -175,9 +179,44 @@ void printTextRainbow(int colorWheelOffset, const char *text, int xPos, int yPos
   }
 }
 
-void printText(uint16_t color, const char *text, int xPos, int yPos) {
-  uint8_t w = 0;
+void printTextRainbowCentered(int colorWheelOffset, const char *text, int yPos) {
   dma_display->setTextSize(1);  // size 1 == 8 pixels high
+
+  // Calculate the width of the text in pixels
+  int textWidth = strlen(text) * 6;  // Assuming 6 pixels per character for size 1
+
+  // Center the text horizontally
+  int xPos = (dma_display->width() - textWidth) / 2;
+
+  dma_display->setCursor(xPos, yPos);  // Set cursor position for centered text
+
+  // Draw text with a rotating color
+  for (uint8_t w = 0; w < strlen(text); w++) {
+    dma_display->setTextColor(colorWheel((w * 32) + colorWheelOffset));
+    dma_display->print(text[w]);
+  }
+}
+
+void printTextCentered(uint16_t color, const char *text, int yPos) {
+  //uint8_t w = 0;
+  dma_display->setTextSize(1);  // size 1 == 8 pixels high
+  // Calculate the width of the text in pixels
+  int textWidth = strlen(text) * 6;  // Assuming 6 pixels per character for size 1
+
+  // Center the text horizontally
+  int xPos = (dma_display->width() - textWidth) / 2;
+
+
+  dma_display->setCursor(xPos, yPos);  // start at top left, with 8 pixel of spacing
+  const char *str = text;
+  dma_display->setTextColor(color);
+  dma_display->print(str);
+}
+
+
+void printText2(uint16_t color, const char *text, int xPos, int yPos) {
+  uint8_t w = 0;
+  dma_display->setTextSize(1);         // size 1 == 8 pixels high
   dma_display->setCursor(xPos, yPos);  // start at top left, with 8 pixel of spacing
   const char *str = text;
   dma_display->setTextColor(color);
@@ -212,8 +251,8 @@ void scrollText(int colorWheelOffset, const char *text) {
     }
 
     dma_display->setCursor(textXPosition, textYPosition);
-    dma_display->drawRect(0, textYPosition, 64, 14, myBLACK);
-    dma_display->fillRect(0, textYPosition, 64, 14, myBLACK);
+    dma_display->drawRect(1, textYPosition, dma_display->width() - 2, 14, myBLACK);
+    dma_display->fillRect(1, textYPosition, dma_display->width() - 2, 14, myBLACK);
     uint8_t w = 0;
     for (w = 0; w < strlen(str); w++) {
       dma_display->setTextColor(colorWheel((w * 32) + colorWheelOffset));
@@ -230,7 +269,7 @@ void scrollString(String str) {
 
   dma_display->setTextSize(2);
 
-  int charWidth = 10;                             // textsize 2 @todo auto calculate charwidth from font
+  int charWidth = 10;  // textsize 2 @todo auto calculate charwidth from font
 
   int pxwidth = w;
   for (int16_t x = dma_display->width(); x >= 0 - w; x--) {
@@ -241,22 +280,40 @@ void scrollString(String str) {
     dma_display->print(str);
     delay(25);
   }
-  dma_display->flipDMABuffer(); // not used if double buffering isn't enabled
+  dma_display->flipDMABuffer();  // not used if double buffering isn't enabled
 }
 
 
-
-
-void drawText(int colorWheelOffset) {
+void drawText(int colorWheelOffset, const char *text, int xPos, int yPos) {
   // dma_display->flipDMABuffer(); // not used if double buffering isn't enabled
   // draw text with a rotating colour
   dma_display->setTextSize(1);  // size 1 == 8 pixels high
-  //dma_display->setTextWrap(false); // Don't wrap at end of line - will do ourselves
 
-  dma_display->setCursor(5, 0);  // start at top left, with 8 pixel of spacing
+  dma_display->setCursor(xPos, yPos);  // start at top left, with 8 pixel of spacing
   uint8_t w = 0;
   //const char *str = "ESP32 DMA";
-  const char *str = "Hi Welcome!";
+  const char *str = text;
+  for (w = 0; w < strlen(str); w++) {
+    dma_display->setTextColor(colorWheel((w * 32) + colorWheelOffset));
+    dma_display->print(str[w]);
+  }
+}
+
+void drawTextCentered(int colorWheelOffset, const char *text, int yPos) {
+  // dma_display->flipDMABuffer(); // not used if double buffering isn't enabled
+  // draw text with a rotating colour
+  dma_display->setTextSize(1);       // size 1 == 8 pixels high
+                                     // Calculate the width of the text in pixels
+  int textWidth = strlen(text) * 6;  // Assuming 6 pixels per character for size 1
+
+  // Center the text horizontally
+  int xPos = (dma_display->width() - textWidth) / 2;
+
+
+  dma_display->setCursor(xPos, yPos);  // start at top left, with 8 pixel of spacing
+  uint8_t w = 0;
+  //const char *str = "ESP32 DMA";
+  const char *str = text;
   for (w = 0; w < strlen(str); w++) {
     dma_display->setTextColor(colorWheel((w * 32) + colorWheelOffset));
     dma_display->print(str[w]);
