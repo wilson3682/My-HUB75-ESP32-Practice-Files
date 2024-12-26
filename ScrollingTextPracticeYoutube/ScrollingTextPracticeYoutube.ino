@@ -128,15 +128,15 @@ void loop() {
   //drawBorder(myCYAN);
   drawBorderRainbow(2, 64);
 
-  printTextRainbow(wheelval, "WELCOME", 11, 1);         //Prints text to chosen x y position with rainbow color
-  //printTextRainbowCentered(wheelval, "WELCOME", 1);    //Prints text X-Centered to chosen Y position with rainbow color
+  //printTextRainbow(wheelval, "WELCOME", 11, 1);         //Prints text to chosen x y position with rainbow color
+  printTextRainbowCentered(wheelval, "WELCOME", 1);    //Prints text X-Centered to chosen Y position with rainbow color
   //printText(myGREEN, "WELCOME", 11, 1);                //Prints text to chosen x y position and desired color
   //printTextCentered(myGREEN, "WELCOME", 1);            //Prints text X-Centered to chosen Y position and desired color
 
   scrollText(wheelval, "AND HAVE A WONDERFUL DAY!");    //Prints Scrolling text with a rainbow color
 
-  printTextRainbow(wheelval, "ENJOY IT", 8, 24);        //Prints text to chosen x y position with rainbow color
-  //printTextRainbowCentered(wheelval, "ENJOY IT", 24);  //Prints text X-Centered to chosen Y position with rainbow color
+  //printTextRainbow(wheelval, "ENJOY IT", 8, 24);        //Prints text to chosen x y position with rainbow color
+  printTextRainbowCentered(wheelval, "ENJOY IT", 24);  //Prints text X-Centered to chosen Y position with rainbow color
   //printText(myMAGENTA, "ENJOY IT!", 8, 24);            //Prints text to chosen x y position and desired color
   //printTextCentered(myMAGENTA, "ENJOY IT!", 24);       //Prints text X-Centered to chosen Y position and desired color
   
